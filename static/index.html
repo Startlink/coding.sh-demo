@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+    <head>
+        <title>coding.sh</title>
+        <meta charset="utf-8">
+        <!--<meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">-->
+        <!--<link rel="stylesheet" href="/assets/normalize.css/normalize.css">-->
+        <link rel="stylesheet" href="/assets/semantic-ui/dist/semantic.css">
+        <link rel="stylesheet" href="/assets/style.css">
+        <link rel="stylesheet" href="/assets/codemirror/lib/codemirror.css">
+        <link rel="stylesheet" href="/assets/codemirror/theme/lesser-dark.css">
+        <link rel="stylesheet" href="/assets/jstree/dist/themes/default/style.min.css">
+        <link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.min.css">
+        
+
+    </head>
+    <body>
+        <div id="header">
+            <div class="ui fixed inverted main menu">
+                <div class="container">
+                    <div class="title item text-logo">
+                        <strong>./coding.sh</strong>
+                    </div>
+                    <a href="javascript:void(0);" class="item">
+                        File
+                    </a>
+                    <a href="javascript:void(0);" class="item">
+                        Edit
+                    </a>
+                    <a href="javascript:void(0);" class="item">
+                        View
+                    </a>
+                    <a href="javascript:void(0);" class="item">
+                        Find
+                    </a>
+                    <a href="javascript:void(0);" class="item">
+                        Navigate
+                    </a>
+                    <a href="javascript:void(0);" class="item">
+                        Editor
+                    </a>
+                    <a href="javascript:void(0);" class="item">
+                        Product
+                    </a>
+                    <a href="javascript:void(0);" class="item">
+                        Debug
+                    </a>
+                    <a href="javascript:void(0);" class="item">
+                        Source Control
+                    </a>
+                    <a href="javascript:void(0);" class="item">
+                        Window
+                    </a>
+                    <a href="javascript:void(0);" class="item">
+                        Help
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="sidebar">
+            <!--<ul id="sample-list">
+            </ul>-->
+            <div id="sidebar-tree">
+            </div>
+        </div>
+        <div id="content">
+            <div id="coding" class = "window">
+                <textarea id="source" name="source" autofocus="autofocus"></textarea>
+            </div>
+            <div id="source-info" class = "window">
+                <div class = "pull-right">
+                    <span id="line-info"></span>
+                    &nbsp;
+                    <span id="language-info"></span>
+                    &nbsp;
+                    <span id="space-info"></span>
+                </div>
+            </div>
+            <div id="console" class = "window">
+                <p>baekjoon@coding.sh:~# g++ -O2 -o Main Main.cpp</p>
+            </div>
+        </div>
+        <script src="/assets/jquery/dist/jquery.min.js"></script>
+        <script src="/assets/semantic-ui/dist/semantic.min.js"></script>
+        <script src="/assets/codemirror/lib/codemirror.js"></script>
+        <script src="/assets/codemirror/addon/mode/loadmode.js"></script>
+        <script src="/assets/codemirror/mode/meta.js"></script>
+        <script src="/assets/jstree/dist/jstree.min.js"></script>
+        <script src="/assets/app.js"></script>
+        <script>
+            $(document).ready(function() {
+                App.init();
+                var sampleData = [
+                    {'file': 'sample.cpp', 'language': 'C++', 'mime': 'text/x-c++src'},
+                    {'file': 'sample.java', 'language': 'Java', 'mime': 'text/x-java'},
+                    {'file': 'sample.py', 'language': 'Python', 'mime': 'text/x-python'}
+                ];
+                /*
+                sampleData.forEach(function(elem, index, arr) {
+                    $('ul#sample-list').append($('<li></li>').append($('<a></a>').attr('href','javascript:void(0);').attr('data-language',elem.language).attr('data-file',elem.file).attr('data-mime',elem.mime).addClass('sample-file').text(elem.language)));
+                    });
+                 */
+                var treeChildren = [];
+                sampleData.forEach(function(elem, index, arr) {
+                    treeChildren.push({
+                        'text': elem.language,
+                        'icon': 'fa fa-file-code-o tree-file',
+                        'data': elem
+                    });
+                });
+                var treeConfig = {
+                    'core': {
+                        'data': [
+                            {
+                                'text': '~/',
+                                'state': {'opened': true},
+                                'icon': 'fa fa-folder-open-o tree-folder',
+                                'children': treeChildren
+                            }
+                        ]
+                    }
+                };
+                $('#sidebar-tree').jstree(treeConfig);
+                /*
+                $('ul#sample-list li').on('click','a',function() {
+                    App.loadSample($(this).attr('data-file'), $(this).attr('data-mime'), $(this).attr('data-language').toLowerCase());
+                });*/
+                $('#sidebar-tree').on('changed.jstree', function(e, data) {
+                    console.log('tree selected');
+                    console.log(data);
+                    if (data.node.icon && data.node.icon.indexOf('tree-file') >= 0) {
+                        App.loadSample(data.node.data.file, data.node.data.mime, data.node.data.language);
+                    }
+                });
+            });
+            </script>
+        <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+    </body>
+</html>

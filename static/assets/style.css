@@ -1,0 +1,58 @@
+html, body {
+    background-color: black;
+}
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+#header {
+    height: 35px;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+#sidebar {
+    position: absolute;
+    width: 240px;
+    left: 0;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background-color: lavenderblush;
+}
+#content {
+    background-color: rgba(0, 0, 0, 0.8);
+    position: relative;
+    margin: 0px 0px 0 240px;
+}
+#content .window {
+}
+#content #coding {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+#content #console {
+    background-color: midnightblue;
+    font-family: monospace;
+    color: #ffffff;
+}
+#source { 
+    display: none;
+}
+.CodeMirror {
+    height: auto;
+}
+#content #source-info {
+    height: 22px;
+    background-color: #363636;
+    padding-right: 10px;
+    color: #ffffff;
+    cursor: row-resize;
+}
+
+.pull-right {
+    float: right !important;
+}
+
+.text-logo {
+    font-family: monospace;
+}

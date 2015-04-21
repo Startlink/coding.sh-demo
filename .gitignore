@@ -1,0 +1,14 @@
+node_modules
+static/assets/**
+!static/assets/*.css
+!static/assets/*.js
+
+
+# vim
+
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
