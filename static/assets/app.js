@@ -96,6 +96,8 @@ var App = function() {
         $(window).resize(function() {
             handleViewportSizeChange();
         });
+        $('#header').click(function() {
+        });
         $('.editor-fullscreen').click(function() {
             toggleFullScreen();
         });
@@ -144,8 +146,10 @@ var App = function() {
                         'id': 'tree-root'
                     }
                 ],
-                "themes" : { "name" : "default-dark" }
-            }
+                "themes" : { "name" : "default-dark" },
+                "multiple": false,
+            },
+            'plugins' : ['wholerow', 'sort'],
         };
         $('#sidebar-tree').jstree(treeConfig);
         $('#sidebar-tree').on('changed.jstree', function(e, d) {
@@ -157,9 +161,9 @@ var App = function() {
             selector: 'a.jstree-anchor:has(.tree-file)',
             callback: function(key, options) {
                 var elementId = $(this).attr('id');
-                console.log('element id: ' + elementId);
-                console.log('key: ' + key);
-                console.log('options: ' + options);
+                //console.log('element id: ' + elementId);
+                //console.log('key: ' + key);
+                //console.log('options: ' + options);
                 var fileId = elementId.replace('_anchor','');
                 if (key == 'open') {
                     openFileWithId(fileId);
@@ -169,7 +173,17 @@ var App = function() {
             },
             items: {
                 'open': {name: '열기'},
+                "sep1": "---------",
                 'rename': {name: '이름 바꾸기'}
+            },
+            zIndex: 100,
+            events: {
+                show: function(opt) {
+                    manual_hover(opt.$trigger);
+                },
+                hide: function(opt) {
+                    manual_dehover(opt.$trigger);
+                }
             }
         });
     }
@@ -200,13 +214,18 @@ var App = function() {
         });
     }
     function openFileWithId(fileId) {
-        $("#sidebar-tree .jstree-clicked").removeClass('jstree-clicked');
+        var elementId = fileId + "_anchor";
+        var tree = $('#sidebar-tree').jstree(true);
+        var selected = tree.get_selected(true);
+        tree.deselect_node(selected);
+        tree.select_node(fileId);
+        /*$("#sidebar-tree .jstree-clicked").removeClass('jstree-clicked');
         files.forEach(function(elem, index, arr) {
             if (elem.id == fileId) {
                 $("#sidebar-tree a#"+elem.id+"_anchor").addClass('jstree-clicked');
                 loadFile(elem.file, elem.mime, elem.language);
             }
-        });
+        });*/
     }
     function renameFile(a, temp) {
         if (temp.val() !== '') {
@@ -234,7 +253,16 @@ var App = function() {
             }
         });
     }
-
+    function manual_hover(node) {
+        console.log(node);
+        node.addClass('jstree-manual-hovered');
+        node.siblings('div.jstree-wholerow').addClass('jstree-wholerow-manual-hovered');
+    }
+    function manual_dehover(node) {
+        console.log(node);
+        node.removeClass('jstree-manual-hovered');
+        node.siblings('div.jstree-wholerow').removeClass('jstree-wholerow-manual-hovered');
+    }
     return {
         init: function() {
             setupCodemirror();

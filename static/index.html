@@ -92,7 +92,6 @@
         <script src="/assets/codemirror/addon/display/fullscreen.js"></script>
         <script src="/assets/codemirror/addon/selection/active-line.js"></script>
         <script src="/assets/jstree/dist/jstree.min.js"></script>
-        <!--<script src="/assets/MooTools-More-1.5.1.js"></script>-->
         <script src="/assets/jQuery-contextMenu/src/jquery.ui.position.js"></script>
         <script src="/assets/jQuery-contextMenu/src/jquery.contextMenu.js"></script>
         <script src="/assets/string-utils.js"></script>
@@ -110,11 +109,11 @@
             $(document).ready(function() {
                 App.init();
                 var sampleData = [
-                    {'file': 'helloworld.cpp', 'language': 'C++', 'mime': 'text/x-c++src'},
-                    {'file': 'sample.cpp', 'language': 'C++', 'mime': 'text/x-c++src'},
                     /*{'file': 'sample.java', 'language': 'Java', 'mime': 'text/x-java'},
                     {'file': 'sample.py', 'language': 'Python', 'mime': 'text/x-python'}*/
                     {'file': 'sample2.cpp', 'language': 'C++', 'mime': 'text/x-c++src'},
+                    {'file': 'sample.cpp', 'language': 'C++', 'mime': 'text/x-c++src'},
+                    {'file': 'helloworld.cpp', 'language': 'C++', 'mime': 'text/x-c++src'},
                 ];
                 sampleData.forEach(function (elem, index, arr) {
                     sampleData[index].id = uuid();

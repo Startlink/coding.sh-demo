@@ -92,6 +92,7 @@ body {
 
 .CodeMirror-fullscreen {
     top: 35px;
+    z-index: 200;
 }
 
 #full-screen-close-text {
@@ -109,4 +110,21 @@ body {
 
 .context-menu-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+.context-menu-separator {
+    border-bottom-color: #575757;
+}
+
+.jstree-manual-hovered {
+    background: 0 0;
+    box-shadow: none;
+    border-radius: 0;
+    color: #fff !important;
+}
+.jstree-manual-hovered > .jstree-icon{
+    opacity: 1 !important;
+}
+.jstree-wholerow-manual-hovered {
+    background: #555;
 }
