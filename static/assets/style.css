@@ -18,7 +18,13 @@ body {
     height: 100%;
     padding: 0;
     margin: 0;
-    background-color: lavenderblush;
+    background-color: #363636;
+    padding-top:5px;
+    border-color: #000000;
+    border-style: solid;
+    border-width: 0px;
+    border-right-width: 1px;
+    border-top-width: 1px;
 }
 #content {
     background-color: rgba(0, 0, 0, 0.8);
@@ -29,11 +35,22 @@ body {
 }
 #content #coding {
     background-color: rgba(0, 0, 0, 0.8);
+    border-color: #000000;
+    border-style: solid;
+    border-width: 0px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
 }
 #content #console {
-    background-color: midnightblue;
+    background-color: #00162d;
     font-family: monospace;
     color: #ffffff;
+    border-color: #000000;
+    border-style: solid;
+    border-width: 0px;
+    border-right-width: 1px;
+    border-top-width: 1px;
 }
 #source { 
     display: none;
@@ -55,4 +72,41 @@ body {
 
 .text-logo {
     font-family: monospace;
+}
+
+.info-text {
+    cursor: pointer;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#line-info {
+    cursor: text;
+}
+
+.ui.dropdown .menu-right {
+    left: auto;
+    left: initial;
+    right: 0px;
+}
+
+.CodeMirror-fullscreen {
+    top: 35px;
+}
+
+#full-screen-close-text {
+    display: none;
+}
+
+.context-menu-list {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: #000000;
+}
+.context-menu-item {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+}
+
+.context-menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
