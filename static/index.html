@@ -10,6 +10,8 @@
         <link rel="stylesheet" href="/assets/codemirror/theme/lesser-dark.css">
         <link rel="stylesheet" href="/assets/codemirror/addon/display/fullscreen.css">
         <link rel="stylesheet" href="/assets/codemirror/addon/dialog/dialog.css">
+        <link rel="stylesheet" href="/assets/codemirror/addon/fold/foldgutter.css">
+        <link rel="stylesheet" href="/assets/codemirror/addon/hint/show-hint.css">
         <link rel="stylesheet" href="/assets/jstree/dist/themes/default-dark/style.css">
         <link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.css">
         <link rel="stylesheet" href="/assets/style.css">
@@ -42,6 +44,9 @@
                     </div>
                     <a href="javascript:void(0);" class="item" id="header-create-file-link">
                         새 파일
+                    </a>
+                    <a href="javascript:void(0);" class="item" id="copy-button">
+                        복사
                     </a>
                     <a href="javascript:void(0);" class="item" id="compile-button">
                         컴파일
@@ -76,8 +81,13 @@
                         <div class="menu">
                             <div class="item" data-value="default">기본</div>
                             <div class="item" data-value="vim">Vim</div>
+                            <div class="item" data-value="emacs">Emacs</div>
+                            <div class="item" data-value="sublime">Sublime</div>
                         </div>
                     </div>
+                    <a href="javascript:void(0);" class="item settings-dropdown">
+설정
+                    </a>
                     <a href="javascript:void(0);" class="item editor-fullscreen">
                         전체 화면 <span id="full-screen-close-text">닫기</span>
                     </a>
@@ -128,15 +138,26 @@
         <script src="/assets/codemirror/mode/meta.js"></script>
         <script src="/assets/codemirror/addon/display/fullscreen.js"></script>
         <script src="/assets/codemirror/addon/selection/active-line.js"></script>
+        <script src="/assets/codemirror/addon/edit/closebrackets.js"></script>
         <script src="/assets/codemirror/addon/edit/matchbrackets.js"></script>
         <script src="/assets/codemirror/addon/search/searchcursor.js"></script>
         <script src="/assets/codemirror/addon/dialog/dialog.js"></script>
         <script src="/assets/codemirror/keymap/vim.js"></script>
+        <script src="/assets/codemirror/keymap/emacs.js"></script>
+        <script src="/assets/codemirror/keymap/sublime.js"></script>
+        <script src="/assets/codemirror/addon/fold/foldcode.js"></script>
+        <script src="/assets/codemirror/addon/fold/foldgutter.js"></script>
+        <script src="/assets/codemirror/addon/fold/brace-fold.js"></script>
+        <script src="/assets/codemirror/addon/fold/comment-fold.js"></script>
+        <script src="/assets/codemirror/addon/fold/indent-fold.js"></script>
+        <script src="/assets/codemirror/addon/hint/show-hint.js"></script>
+        <script src="/assets/codemirror/addon/hint/anyword-hint.js"></script>
+        <script src="/assets/codemirror/addon/selection/selection-pointer.js"></script>
         <script src="/assets/jstree/dist/jstree.js"></script>
         <script src="/assets/typed.js/js/typed.js"></script>
         <script src="/assets/jquery.scrollTo/jquery.scrollTo.js"></script>
+        <script src="/assets/zeroclipboard/dist/Zeroclipboard.js"></script>
         <script src="/assets/string-utils.js"></script>
-        <script src="/assets/selection-utils.js"></script>
         <script src="/assets/app.js"></script>
         <script>
             $(document).ready(function() {

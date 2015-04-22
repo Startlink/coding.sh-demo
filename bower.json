@@ -21,6 +21,7 @@
     "font-awesome": "~4.3.0",
     "semantic-ui": "~1.12.0",
     "modernizr": "~2.8.3",
-    "typed.js": "v1.1"
+    "typed.js": "v1.1",
+    "zeroclipboard": "~2.2.0"
   }
 }

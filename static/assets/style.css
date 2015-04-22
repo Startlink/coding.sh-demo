@@ -172,7 +172,7 @@ input.jstree-rename-input {
     font-family: monospace;
 }
 #console .ui.dimmer {
-    background-color: rgba(0, 22, 45, 0.85);
+    background-color: rgba(0, 22, 45, 0.35);
 }
 
 #console-content {
@@ -189,4 +189,21 @@ input.jstree-rename-input {
 
 #header .main.menu .language-dropdown.dropdown.item {
     min-width: 78px;
+}
+
+.CodeMirror-foldmarker {
+    color: #aaa;
+    text-shadow: #888 1px 1px 2px, #888 -1px -1px 2px, #888 1px -1px 2px, #888 -1px 1px 2px;
+}
+
+.CodeMirror-hints {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: black;
+    color: #fff;
+}
+.CodeMirror-hint {
+    color: #fff;
+}
+li.CodeMirror-hint-active {
+    background-color: rgba(255, 255, 255, 0.3);
 }

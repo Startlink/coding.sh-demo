@@ -78,6 +78,10 @@ var App = function() {
             }
         }
     }
+    function removeCodeMirrorSearchClass() {
+        //$('#coding div.CodeMirror-scroll div.CodeMirror-code span.cm-cm-overlay.cm-searching').removeClass('cm-cm-overlay cm-searching');
+
+    }
     function saveEditor() {
         if (Modernizr.localstorage && currentEditor) {
             localStorage.setItem('codemirror-keymap',currentEditor);
@@ -85,21 +89,27 @@ var App = function() {
     }
     function updateEditor(val) {
         if (val && codeMirror) {
-            if (val == 'default' || val == 'vim') {
+            if (val == 'default' || val == 'vim' || val == 'emacs' || val == 'sublime') {
                 currentEditor = val;
                 codeMirror.setOption('keyMap',currentEditor);
                 updateEditorInfo();
+                removeCodeMirrorSearchClass();
                 saveEditor();
             }
         }
     }
     function updateEditorInfo() {
         if (currentEditor) {
+            var t = '기본';
             if (currentEditor == 'default') {
-                $('#editor-info').text('기본');
             } else if (currentEditor == 'vim') {
-                $('#editor-info').text('Vim');
+                t = 'Vim';
+            } else if (currentEditor == 'emacs') {
+                t = 'Emacs';
+            } else if (currentEditor == 'sublime') {
+                t = 'Sublime';
             }
+            $('#editor-info').text(t);
         }
     }
     function setupCodemirror() {
@@ -107,7 +117,7 @@ var App = function() {
             currentEditor = localStorage.getItem('codemirror-keymap');
         }
         if (currentEditor) {
-            if (currentEditor != 'default' && currentEditor != 'vim') {
+            if (currentEditor != 'default' && currentEditor != 'vim' && currentEditor != 'emacs' && currentEditor != 'sublime') {
                 currentEditor = 'default';
             }
         } else {
@@ -117,6 +127,9 @@ var App = function() {
         updateEditorInfo();
         var myTextArea = document.getElementById("source");
         CodeMirror.modeURL = "/assets/codemirror/mode/%N/%N.js";
+        CodeMirror.commands.autocomplete = function(cm) {
+            cm.showHint({hint: CodeMirror.hint.anyword});
+        }
         codeMirror = CodeMirror.fromTextArea(myTextArea,{
             lineNumbers: true,
             matchBrackets: true,
@@ -133,9 +146,13 @@ var App = function() {
                 },
                 'F11': function(cm) {
                     toggleFullScreen(false);
-                }
+                },
+                'Alt-Space': 'autocomplete'
             },
             styleActiveLine: true,
+            foldGutter: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+            selectionPointer: true
         });
         updateIndentInfo();
         codeMirror.on('cursorActivity', function() {
@@ -227,10 +244,10 @@ var App = function() {
         });
         $('#run-button').click(function(e) {
             if (currentFileId !== null) {
-                /*$('#console').dimmer({
+                $('#console').dimmer({
                     closable: false
-                }).dimmer('show');*/
-
+                }).dimmer('show');
+               var f = getFileById(currentFileId);
                 $('#console .ui.dimmer .text-message').text('준비중');
                 setTimeout(function() {
                     $('#console .ui.dimmer .text-message').text('컴파일 하는 중');
@@ -242,14 +259,20 @@ var App = function() {
                             $('#console .ui.dimmer .text-message').text('sample.cpp < data2.in 실행중');
                             updateConsole('./sample < data2.in');
                             setTimeout(function() {
-                                //$('#console').dimmer('hide');
+                               $('#console').dimmer('hide');
                             }, 3000);
                         }, 3000);
                     }, 3000);
                 }, 500);
             }
         });
-        
+        var client = new ZeroClipboard($('#copy-button'));
+        client.on('copy', function(e) {
+            var clipboard = e.clipboardData;
+            if (codeMirror) {
+                clipboard.setData('text/plain',codeMirror.getValue());
+            }
+        });
     }
     function convertToTreeData(elem) {
         return {
