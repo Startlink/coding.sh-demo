@@ -37,17 +37,17 @@
             </div>
         </div>
         <div id="header">
-            <div class="ui fixed inverted main menu">
+            <div class="ui fixed inverted main menu" id="header-menu">
                 <div class="container">
                     <div class="title item text-logo">
                         <strong>./coding.sh</strong>
                     </div>
                     <a href="javascript:void(0);" class="item" id="header-create-file-link">
                         새 파일
-                    </a>
+                    </a><!--
                     <a href="javascript:void(0);" class="item" id="copy-button">
                         복사
-                    </a>
+                    </a>-->
                     <a href="javascript:void(0);" class="item" id="compile-button">
                         컴파일
                     </a>
@@ -85,18 +85,76 @@
                             <div class="item" data-value="sublime">Sublime</div>
                         </div>
                     </div>
-                    <a href="javascript:void(0);" class="item settings-dropdown">
-설정
-                    </a>
+                    <div class="ui pointing settings-dropdown dropdown link item">
+                        <span class="text"><i class="fa fa-cog"></i></span>
+                        <i class="indent-dropdown dropdown icon"></i>
+                        <div class = "menu">
+                            <div class = "item">
+                                <div class = "ui toggle checkbox">
+                                    <label>Soft Tab</label>
+                                    <input type="checkbox" name="soft-tab">
+                                </div>
+                            </div>
+                            <div class = "item">
+                                <div class = "ui toggle checkbox">
+                                    <label>Line Highlight</label>
+                                    <input type="checkbox" name="line-highlight">
+                                </div>
+                            </div>
+                            <div class = "item">
+                                <div class = "ui toggle checkbox">
+                                    <label>줄 번호</label>
+                                    <input type="checkbox" name="line-number">
+                                </div>
+                            </div>
+                            <div class = "item">
+                                <div class = "ui toggle checkbox">
+                                    <label>Match Brackets</label>
+                                    <input type="checkbox" name="match-brackets">
+                                </div>
+                            </div>
+                            <div class = "item">
+                                <div class = "ui toggle checkbox">
+                                    <label>Auto Close Brackets</label>
+                                    <input type="checkbox" name="auto-close-brackets">
+                                </div>
+                            </div>
+                            <div class = "item">
+                                <div class = "ui toggle checkbox">
+                                    <label>Fold Gutter</label>
+                                    <input type="checkbox" name="fold-gutter">
+                                </div>
+                            </div>
+                            <div class = "item">
+                                <div class = "ui toggle checkbox">
+                                    <label>자동 완성</label>
+                                    <input type="checkbox" name="auto-complete">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <a href="javascript:void(0);" class="item editor-fullscreen">
                         전체 화면 <span id="full-screen-close-text">닫기</span>
                     </a>
-                    <a href="javascript:void(0);" class="item">
-                        업데이트 안내
+                    <a href="javascript:void(0);" class="item" id="update-button">
+                        업데이트
                     </a>
                     <a href="javascript:void(0);" class="item">
                         도움말
                     </a>
+                    <a href="https://www.facebook.com/startlink.io" target="_blank" class="item">Startlink</a>
+                    <a href="javascript:void(0);" class="item">
+                        로그아웃
+                    </a>
+                    <div class = "menu right" id="server-status">
+                        <div class = "item">
+                            <span class="text">
+                                <div class="ui red empty circular label hidden"></div>
+                                <div class="ui yellow empty circular label hidden"></div>
+                                <div class="ui green empty circular label"></div>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -180,6 +238,23 @@
                 <div class="ui positive right labeled icon button">
                     예
                     <i class="checkmark icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="ui long update modal" id="update-modal">
+            <i class="close icon"></i>
+            <div class="header">
+                업데이트
+            </div>
+            <div class="content">
+                <div class="description">
+                    <div class="ui header">2015/4/23</div>
+                    <p>뭐가 업뎃...</p>
+                </div>
+            </div>
+            <div class="actions">
+                <div class="ui primary button">
+                    닫기
                 </div>
             </div>
         </div>

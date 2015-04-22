@@ -14,6 +14,8 @@ var App = function() {
     function handleViewportSizeChange(first) {
         var w = $(window).width();
         var h = $(window).height();
+        headerBarHeight = $('#header-menu').height();
+        $('#header').css('height',headerBarHeight);
         //console.log('viewport size changed, width: ' + w + ', height: ' + h);
         if (codeMirror && codeMirror.getOption("fullScreen")) {
             return;
@@ -147,7 +149,10 @@ var App = function() {
                 'F11': function(cm) {
                     toggleFullScreen(false);
                 },
-                'Alt-Space': 'autocomplete'
+                'Alt-Space': 'autocomplete',
+                'Ctrl-R': function(cm) {
+                    demoRun();
+                },
             },
             styleActiveLine: true,
             foldGutter: true,
@@ -195,6 +200,13 @@ var App = function() {
                 editorDropdown.dropdown('hide');
             }
         });
+        var settingsDropdown = $('#header .ui.main.menu .dropdown.settings-dropdown');
+        settingsDropdown.dropdown({
+            transition: 'drop',
+            action: function (text, value) {
+            }
+        });
+        $('#header .ui.main.menu .dropdown.settings-dropdown .ui.checkbox').checkbox();
     }
     function toggleFullScreen(close) {
         var fullScreen = codeMirror.getOption('fullScreen');
@@ -243,36 +255,22 @@ var App = function() {
             createNode(null, false);
         });
         $('#run-button').click(function(e) {
-            if (currentFileId !== null) {
-                $('#console').dimmer({
-                    closable: false
-                }).dimmer('show');
-               var f = getFileById(currentFileId);
-                $('#console .ui.dimmer .text-message').text('준비중');
-                setTimeout(function() {
-                    $('#console .ui.dimmer .text-message').text('컴파일 하는 중');
-                    updateConsole('g++ -O2 -o sample -std=c++0x sample.cpp');
-                    setTimeout(function() {
-                        $('#console .ui.dimmer .text-message').text('sample.cpp < data.in 실행중');
-                        updateConsole('./sample < data.in');
-                        setTimeout(function() {
-                            $('#console .ui.dimmer .text-message').text('sample.cpp < data2.in 실행중');
-                            updateConsole('./sample < data2.in');
-                            setTimeout(function() {
-                               $('#console').dimmer('hide');
-                            }, 3000);
-                        }, 3000);
-                    }, 3000);
-                }, 500);
-            }
+            demoRun();
         });
+        /*
         var client = new ZeroClipboard($('#copy-button'));
         client.on('copy', function(e) {
             var clipboard = e.clipboardData;
             if (codeMirror) {
                 clipboard.setData('text/plain',codeMirror.getValue());
             }
+        });*/
+        $('#update-button').click(function(e) {
+            e.preventDefault();
+            $('#update-modal').modal('show');
         });
+        //$('#header #server-status .green').transition('set looping').transition('pulse', '1500ms');
+        //.transition('remove looping');
     }
     function convertToTreeData(elem) {
         return {
@@ -703,6 +701,31 @@ var App = function() {
         });
         $('#console-content').scrollTo(p);
     }
+    function demoRun() {
+        if (currentFileId !== null) {
+            $('#console').dimmer({
+                closable: false
+            }).dimmer('show');
+            var f = getFileById(currentFileId);
+            $('#console .ui.dimmer .text-message').text('준비중');
+            setTimeout(function() {
+                $('#console .ui.dimmer .text-message').text('컴파일 하는 중');
+                updateConsole('g++ -O2 -o sample -std=c++0x sample.cpp');
+                setTimeout(function() {
+                    $('#console .ui.dimmer .text-message').text('sample.cpp < data.in 실행중');
+                    updateConsole('./sample < data.in');
+                    setTimeout(function() {
+                        $('#console .ui.dimmer .text-message').text('sample.cpp < data2.in 실행중');
+                        updateConsole('./sample < data2.in');
+                        setTimeout(function() {
+                            $('#console').dimmer('hide');
+                        }, 3000);
+                    }, 3000);
+                }, 3000);
+            }, 500);
+        }
+    }
+
     return {
         init: function() {
             setupCodemirror();
