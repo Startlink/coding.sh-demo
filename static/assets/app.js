@@ -24,11 +24,19 @@ var App = function() {
                 ratio = 0.5;
             } else {
                 var total = codingHeight + consoleHeight;
-                ratio = codingHeight / (codingHeight + consoleHeight);
+                if (total > 0) {
+                    ratio = codingHeight / (codingHeight + consoleHeight);
+                }
+            }
+            if (first && Modernizr.localstorage) {
+                var l = localStorage.getItem('ratio');
+                if (l !== null) {
+                    ratio = parseFloat(l);
+                }
             }
             codingHeight = contentHeight * ratio;
             consoleHeight = contentHeight - codingHeight;
-            changeContentHeight(codingHeight, consoleHeight);
+            changeContentHeight(codingHeight, consoleHeight); 
         }
     }
     function adjustView(sourceInfoTop) {
@@ -46,6 +54,13 @@ var App = function() {
         $("#content #console").css('height',consoleHeight);
         if (codeMirror) {
             codeMirror.setSize(null, codingHeight);
+        }
+        if (Modernizr.localstorage) {
+            var total = codingHeight + consoleHeight;
+            if (total > 0) {
+                ratio = codingHeight / (codingHeight + consoleHeight);
+                localStorage.setItem('ratio',ratio);
+            }
         }
     }
     function setupCodemirror() {
@@ -160,10 +175,12 @@ var App = function() {
                 themes : { name : "default-dark" },
                 multiple: false,
                 check_callback: function(operation, node, node_parent, node_position, more) {
+                    console.log(operation);
                     //console.log('rename node');
                     //console.log(node);
                     if (operation == 'rename_node') {
                         return (node.data.parent != '#');
+                    } else if (operation == 'move_node') {
                     }
                 }
             },
@@ -178,7 +195,8 @@ var App = function() {
                     valid_children: [],
                 },
                 '#': {
-                    max_depth: 4
+                    max_depth: 4,
+                    max_children: 20
                 }
             },
             contextmenu: {
@@ -220,42 +238,6 @@ var App = function() {
                             icon: '',
                             shortcut: 113,
                             shortcut_label: 'F2'
-                        },
-                        cut_node: {
-                            separator_before: false,
-                            separator_after: false,
-                            _disabled: function (data) {
-                                return isRootNode(data);
-                            },
-                            label: '잘라내기',
-                            action: function(data) {
-                                cutNode(data);
-                            },
-                            icon: 'fa fa-cut',
-                        },
-                        copy_node: {
-                            separator_before: false,
-                            separator_after: false,
-                            _disabled: function (data) {
-                                return isRootNode(data);
-                            },
-                            label: '복사',
-                            action: function(data) {
-                                copyNode(data);
-                            },
-                            icon: 'fa fa-copy',
-                        },
-                        paste_node: {
-                            separator_before: false,
-                            separator_after: true,
-                            _disabled: function (data) {
-                                return isRootNode(data) || !$.jstree.reference(data.reference).can_paste();
-                            },
-                            label: '붙여넣기',
-                            action: function(data) {
-                                pasteNode(data);
-                            },
-                            icon: 'fa fa-paste',
                         },
                         delete_node: {
                             separator_before: false,
@@ -503,6 +485,7 @@ var App = function() {
             registerEventHandler();
             makeDraggable();
             loadTree();
+            $('#loading').remove();
         },
     };
 }();
