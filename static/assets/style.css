@@ -99,32 +99,31 @@ body {
     display: none;
 }
 
-.context-menu-list {
-    background-color: rgba(0, 0, 0, 0.8);
-    border-color: #000000;
-}
-.context-menu-item {
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #ffffff;
+.vakata-context {
+    z-index: 100 !important;
 }
 
-.context-menu-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+.vakata-context, .vakata-context ul {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: #000000;
+    box-shadow: 1px 1px 1px #000;
+}
+.vakata-context li>a {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    text-shadow: none;
+}
+.vakata-context li>a .vakata-contextmenu-sep, .vakata-context .vakata-context-separator>a, .vakata-context .vakata-context-separator>a:hover {
+    border-color: #575757;
+}
+
+.vakata-context .vakata-context-hover>a, .vakata-context li>a:hover {
+    color: #ffffff;
+    box-shadow: none;
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 .context-menu-separator {
     border-bottom-color: #575757;
 }
 
-.jstree-manual-hovered {
-    background: 0 0;
-    box-shadow: none;
-    border-radius: 0;
-    color: #fff !important;
-}
-.jstree-manual-hovered > .jstree-icon{
-    opacity: 1 !important;
-}
-.jstree-wholerow-manual-hovered {
-    background: #555;
-}

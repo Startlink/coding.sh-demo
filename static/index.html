@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="/assets/codemirror/addon/display/fullscreen.css">
         <link rel="stylesheet" href="/assets/jstree/dist/themes/default-dark/style.min.css">
         <link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" href="/assets/jQuery-contextMenu/src/jquery.contextMenu.css">
+        <!--<link rel="stylesheet" href="/assets/jQuery-contextMenu/src/jquery.contextMenu.css">-->
         <link rel="stylesheet" href="/assets/style.css">
         
 
@@ -85,15 +85,16 @@
         </div>
         <script src="/assets/jquery/dist/jquery.min.js"></script>
         <script src="/assets/semantic-ui/dist/semantic.min.js"></script>
+        <script src="/assets/modernizr/modernizr.js"></script>
         <script src="/assets/codemirror/lib/codemirror.js"></script>
-        <!--<script src="/assets/codemirror/addon/mode/loadmode.js"></script>-->
+        <script src="/assets/codemirror/addon/mode/loadmode.js"></script>
         <script src="/assets/codemirror/mode/clike/clike.js"></script>
         <script src="/assets/codemirror/mode/meta.js"></script>
         <script src="/assets/codemirror/addon/display/fullscreen.js"></script>
         <script src="/assets/codemirror/addon/selection/active-line.js"></script>
         <script src="/assets/jstree/dist/jstree.min.js"></script>
-        <script src="/assets/jQuery-contextMenu/src/jquery.ui.position.js"></script>
-        <script src="/assets/jQuery-contextMenu/src/jquery.contextMenu.js"></script>
+        <!--<script src="/assets/jQuery-contextMenu/src/jquery.ui.position.js"></script>
+        <script src="/assets/jQuery-contextMenu/src/jquery.contextMenu.js"></script>-->
         <script src="/assets/string-utils.js"></script>
         <script src="/assets/selection-utils.js"></script>
         <script src="/assets/app.js"></script>
@@ -108,17 +109,6 @@
             }
             $(document).ready(function() {
                 App.init();
-                var sampleData = [
-                    /*{'file': 'sample.java', 'language': 'Java', 'mime': 'text/x-java'},
-                    {'file': 'sample.py', 'language': 'Python', 'mime': 'text/x-python'}*/
-                    {'file': 'sample2.cpp', 'language': 'C++', 'mime': 'text/x-c++src'},
-                    {'file': 'sample.cpp', 'language': 'C++', 'mime': 'text/x-c++src'},
-                    {'file': 'helloworld.cpp', 'language': 'C++', 'mime': 'text/x-c++src'},
-                ];
-                sampleData.forEach(function (elem, index, arr) {
-                    sampleData[index].id = uuid();
-                });
-                App.makeTree(sampleData);
             });
             </script>
         <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>

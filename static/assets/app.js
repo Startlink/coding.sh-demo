@@ -125,73 +125,146 @@ var App = function() {
         });
     }
     function makeTree(data) {
-        var treeChildren = [];
+        var treeData = [];
         data.forEach(function(elem, index, arr) {
-            treeChildren.push({
-                'text': elem.file,
-                'icon': 'fa fa-file-code-o tree-file',
-                'data': elem,
-                'id': elem.id
+            treeData.push({
+                text: elem.name,
+                icon: (elem.type == 'folder' ? 'fa fa-folder-open-o' : 'fa fa-file-code-o tree-file'),
+                data: elem,
+                id: elem.id,
+                parent: elem.parent,
+                state: {
+                    opened: (elem.type == 'folder' ? true : false),
+                    disabled: false,
+                    selected: (elem.id == 'tree-root' ? true : false),
+                }
             });
         });
         files = data;
+        saveFiles();
         var treeConfig = {
             'core': {
-                'data': [
-                    {
-                        'text': '~/',
-                        'state': {'opened': true},
-                        'icon': 'fa fa-folder-open-o',
-                        'children': treeChildren,
-                        'id': 'tree-root'
-                    }
-                ],
+                'data': treeData,
                 "themes" : { "name" : "default-dark" },
                 "multiple": false,
             },
-            'plugins' : ['wholerow', 'sort'],
-        };
-        $('#sidebar-tree').jstree(treeConfig);
-        $('#sidebar-tree').on('changed.jstree', function(e, d) {
-            if (d.node.icon && d.node.icon.includes('tree-file')) {
-                loadFile(d.node.data.file, d.node.data.mime, d.node.data.language);
-            }
-        });
-        $('#sidebar-tree').contextMenu({
-            selector: 'a.jstree-anchor:has(.tree-file)',
-            callback: function(key, options) {
-                var elementId = $(this).attr('id');
-                //console.log('element id: ' + elementId);
-                //console.log('key: ' + key);
-                //console.log('options: ' + options);
-                var fileId = elementId.replace('_anchor','');
-                if (key == 'open') {
-                    openFileWithId(fileId);
-                } else if (key == 'rename') {
-                    renameFileWithId(fileId);
-                }
-            },
-            items: {
-                'open': {name: '열기'},
-                "sep1": "---------",
-                'rename': {name: '이름 바꾸기'}
-            },
-            zIndex: 100,
-            events: {
-                show: function(opt) {
-                    manual_hover(opt.$trigger);
+            'plugins' : ['wholerow', 'sort', 'unique', 'contextmenu'],
+            'contextmenu': {
+                'select_node': false,
+                'show_at_node': false,
+                'items': function(o, cb) {
+                    return {
+                        'create-folder': {
+                            'separator_before': false,
+                            'separator_after': false,
+                            '_disabled': false,
+                            'label': '새 폴더',
+                            'action': function(data) {
+                                createFolder(data);
+                            },
+                            'icon': 'fa fa-folder-o'
+                        },
+                        'create-file': {
+                            'separator_before': false,
+                            'separator_after': true,
+                            '_disabled': false,
+                            'label': '새 파일',
+                            'action': function(data) {
+                                createFile(data);
+                            },
+                            'icon': 'fa fa-file-text-o'
+                        },
+                        'rename-node': {
+                            'separator_before': false,
+                            'separator_after': true,
+                            '_disabled': false,
+                            'label': '이름 바꾸기',
+                            'action': function(data) {
+                                renameNode(data);
+                            },
+                            'icon': ''
+                        },
+                        'cut-node': {
+                            'separator_before': false,
+                            'separator_after': false,
+                            '_disabled': function (data) {
+                                return isRootNode(data);
+                            },
+                            'label': '잘라내기',
+                            'action': function(data) {
+                                cutNode(data);
+                            },
+                            'icon': 'fa fa-cut',
+                        },
+                        'copy-node': {
+                            'separator_before': false,
+                            'separator_after': false,
+                            '_disabled': function (data) {
+                                return isRootNode(data);
+                            },
+                            'label': '복사',
+                            'action': function(data) {
+                                copyNode(data);
+                            },
+                            'icon': 'fa fa-copy',
+                        },
+                        'paste-node': {
+                            'separator_before': false,
+                            'separator_after': true,
+                            '_disabled': function (data) {
+                                return isRootNode(data) || !$.jstree.reference(data.reference).can_paste();
+                            },
+                            'label': '붙여넣기',
+                            'action': function(data) {
+                                pasteNode(data);
+                            },
+                            'icon': 'fa fa-paste',
+                        },
+                        'delete-node': {
+                            'separator_before': false,
+                            'separator_after': false,
+                            '_disabled': function(data) {
+                                return isRootNode(data);
+                            },
+                            'label': '삭제',
+                            'action': function(data) {
+                                deleteNode(data);
+                            },
+                            'icon': 'fa fa-trash-o'
+                        },
+                    };
                 },
-                hide: function(opt) {
-                    manual_dehover(opt.$trigger);
-                }
+            },
+        };
+        var tree = $('#sidebar-tree');
+        tree.jstree(treeConfig);
+        tree.on('changed.jstree', function(e, d) {
+            if (d.node && d.node.data.type == 'file') {
+                loadFile(d.node.data.name, d.node.data.mime, d.node.data.language);
             }
         });
+    }
+    function isRootNode(data) {
+        var inst = $.jstree.reference(data.reference),
+            obj = inst.get_node(data.reference);
+        return (obj.parent == '#');
+    }
+
+    function createFolder(data) {
+    }
+    function createFile(data) {
+    }
+    function deleteNode(data) {
+    }
+    function cutNode(data) {
+    }
+    function copyNode(data) {
+    }
+    function pasteNode(data) {
     }
     function loadSource(sourceCode, mime, language) {
         var doc = CodeMirror.Doc(sourceCode, mime, 0);
         codeMirror.swapDoc(doc);
-        //codeMirror.setValue(sourceCode);
-        /*
         var mode,spec;
         var info = CodeMirror.findModeByMIME(mime);
         if (info) {
@@ -203,9 +276,7 @@ var App = function() {
             CodeMirror.autoLoadMode(codeMirror, mode);
             $('#language-info').text(language);
             codeMirror.focus();
-        }*/
-        $('#language-info').text(language);
-        codeMirror.focus();
+        }
     }
 
     function loadFile(filename, mime, language) {
@@ -219,49 +290,30 @@ var App = function() {
         var selected = tree.get_selected(true);
         tree.deselect_node(selected);
         tree.select_node(fileId);
-        /*$("#sidebar-tree .jstree-clicked").removeClass('jstree-clicked');
-        files.forEach(function(elem, index, arr) {
-            if (elem.id == fileId) {
-                $("#sidebar-tree a#"+elem.id+"_anchor").addClass('jstree-clicked');
-                loadFile(elem.file, elem.mime, elem.language);
+    }
+    function loadTree() {
+        var ans = null;
+        if (Modernizr.localstorage) {
+            var l = localStorage.getItem('files');
+            if (l) {
+                ans = JSON.parse(l);
             }
-        });*/
-    }
-    function renameFile(a, temp) {
-        if (temp.val() !== '') {
-            a.contents().last()[0].textContent = temp.val();
         }
-        temp.remove();
-        a.show();
-    }
-    function renameFileWithId(fileId) {
-        var a = $("#sidebar-tree a#"+fileId+"_anchor");
-        var temp = $('<input name="rename" type="text">');
-        a.hide();
-        a.after(temp);
-        temp.focus();
-        temp.val(a.text());
-        var lastDot = a.text().lastIndexOf('.');
-        if (lastDot != -1) {
-            temp.selectRange(lastDot);
+        if (ans) {
+        } else {
+            ans = [
+                {'name': '~/', 'type': 'folder', 'id': 'tree-root', 'parent': '#'},
+                {'name': 'sample2.cpp', 'language': 'C++', 'mime': 'text/x-c++src', 'id': 'sample2', 'type': 'file', 'parent': 'tree-root'},
+                {'name': 'sample.cpp', 'language': 'C++', 'mime': 'text/x-c++src', 'id': 'sample', 'type': 'file', 'parent': 'tree-root'},
+                {'name': 'helloworld.cpp', 'language': 'C++', 'mime': 'text/x-c++src', 'id': 'helloworld', 'type': 'file', 'parent': 'tree-root'}
+            ];
         }
-        temp.blur(function() {
-            renameFile(a,$(this));
-        }).keyup(function(e) {
-            if (e.keyCode == 13) {
-                renameFile(a,$(this));
-            }
-        });
+        makeTree(ans);
     }
-    function manual_hover(node) {
-        console.log(node);
-        node.addClass('jstree-manual-hovered');
-        node.siblings('div.jstree-wholerow').addClass('jstree-wholerow-manual-hovered');
-    }
-    function manual_dehover(node) {
-        console.log(node);
-        node.removeClass('jstree-manual-hovered');
-        node.siblings('div.jstree-wholerow').removeClass('jstree-wholerow-manual-hovered');
+    function saveFiles() {
+        if (Modernizr.localstorage) {
+            localStorage.setItem('files',JSON.stringify(files));
+        }
     }
     return {
         init: function() {
@@ -269,9 +321,7 @@ var App = function() {
             handleViewportSizeChange(true);
             registerEventHandler();
             makeDraggable();
+            loadTree();
         },
-        makeTree: function(data) {
-            makeTree(data);
-        }
     };
 }();
