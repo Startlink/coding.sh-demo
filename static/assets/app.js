@@ -234,14 +234,10 @@ var App = function() {
                 $('#console .ui.dimmer .text-message').text('준비중');
                 setTimeout(function() {
                     $('#console .ui.dimmer .text-message').text('컴파일 하는 중');
-                    for (var i=0; i<10; i++) {
                     updateConsole('g++ -O2 -o sample -std=c++0x sample.cpp');
-                    }
                     setTimeout(function() {
                         $('#console .ui.dimmer .text-message').text('sample.cpp < data.in 실행중');
-                    for (var i=0; i<10; i++) {
                         updateConsole('./sample < data.in');
-                    }
                         setTimeout(function() {
                             $('#console .ui.dimmer .text-message').text('sample.cpp < data2.in 실행중');
                             updateConsole('./sample < data2.in');
