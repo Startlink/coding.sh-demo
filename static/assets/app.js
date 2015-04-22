@@ -4,8 +4,13 @@ var App = function() {
     var lastMouseY = null;
     var diffTop = null;
     var headerBarHeight = 35;
-    var sourceInfoHeight = 22;
+    var consoleTabHeight = 26;
+    var sideBarWidth = 240;
     var currentFileId = null;
+    var undoHistory = {};
+
+    var demoOutput = {};
+    var currentEditor = null;
     function handleViewportSizeChange(first) {
         var w = $(window).width();
         var h = $(window).height();
@@ -16,7 +21,7 @@ var App = function() {
         var contentHeight = h-headerBarHeight;
         if (contentHeight >= 0) {
             $("#content").css('height',contentHeight);
-            contentHeight -= sourceInfoHeight;
+            contentHeight -= consoleTabHeight;
             var codingHeight = parseFloat($("#content #coding").css('height'));
             var consoleHeight = parseFloat($("#content #console").css('height'));
             var ratio = 0.5;
@@ -45,13 +50,14 @@ var App = function() {
         var contentHeight = h-headerBarHeight;
         if (contentHeight >= 0) {
             var codingHeight = sourceInfoTop;
-            var consoleHeight = contentHeight - codingHeight - sourceInfoHeight;
+            var consoleHeight = contentHeight - codingHeight - consoleTabHeight;
             changeContentHeight(codingHeight, consoleHeight);
         }
     }
     function changeContentHeight(codingHeight, consoleHeight) {
         $("#content #coding").css('height',codingHeight);
         $("#content #console").css('height',consoleHeight);
+        $('#run-loading,  #run-loading>.ui.segment').css('top',headerBarHeight + codingHeight + consoleTabHeight).css('left',sideBarWidth);
         if (codeMirror) {
             codeMirror.setSize(null, codingHeight);
         }
@@ -63,7 +69,52 @@ var App = function() {
             }
         }
     }
+    function updateIndentLevel(indent) {
+        var x = parseInt(indent);
+        if (codeMirror) {
+            if (x == 2 || x == 4 || x == 3 || x == 8) {
+                codeMirror.setOption('indentUnit', x);
+                updateIndentInfo();
+            }
+        }
+    }
+    function saveEditor() {
+        if (Modernizr.localstorage && currentEditor) {
+            localStorage.setItem('codemirror-keymap',currentEditor);
+        }
+    }
+    function updateEditor(val) {
+        if (val && codeMirror) {
+            if (val == 'default' || val == 'vim') {
+                currentEditor = val;
+                codeMirror.setOption('keyMap',currentEditor);
+                updateEditorInfo();
+                saveEditor();
+            }
+        }
+    }
+    function updateEditorInfo() {
+        if (currentEditor) {
+            if (currentEditor == 'default') {
+                $('#editor-info').text('기본');
+            } else if (currentEditor == 'vim') {
+                $('#editor-info').text('Vim');
+            }
+        }
+    }
     function setupCodemirror() {
+        if (Modernizr.localstorage) {
+            currentEditor = localStorage.getItem('codemirror-keymap');
+        }
+        if (currentEditor) {
+            if (currentEditor != 'default' && currentEditor != 'vim') {
+                currentEditor = 'default';
+            }
+        } else {
+            currentEditor = 'default';
+        }
+        saveEditor();
+        updateEditorInfo();
         var myTextArea = document.getElementById("source");
         CodeMirror.modeURL = "/assets/codemirror/mode/%N/%N.js";
         codeMirror = CodeMirror.fromTextArea(myTextArea,{
@@ -74,13 +125,11 @@ var App = function() {
             theme: "lesser-dark",
             mode: "text/x-c++src",
             readOnly: 'nocursor',
+            keyMap: currentEditor,
             extraKeys: {
                 'Tab': function(cm) {
                     var spaces = new Array(cm.getOption("indentUnit") + 1).join(" ");
                     cm.replaceSelection(spaces);
-                },
-                'Esc': function(cm) {
-                    toggleFullScreen(true);
                 },
                 'F11': function(cm) {
                     toggleFullScreen(false);
@@ -88,7 +137,7 @@ var App = function() {
             },
             styleActiveLine: true,
         });
-        $('#space-info').text('Space: ' + 4); 
+        updateIndentInfo();
         codeMirror.on('cursorActivity', function() {
             var cur = codeMirror.getCursor();
             $('#line-info').text((cur.line+1)+':'+(cur.ch+1));
@@ -97,9 +146,38 @@ var App = function() {
             saveSource();
         });
     }
-    function makeDraggable() {
+    function updateIndentInfo() {
+        if (codeMirror) {
+            $('#indent-info').text(codeMirror.getOption('indentUnit')); 
+        } else {
+            $('#indent-info').text(''); 
+        }
     }
     function setupDropdown() {
+        var indentDropdown = $('#header .ui.main.menu .dropdown.indent-dropdown');
+        indentDropdown.dropdown({
+            transition: 'drop',
+            action: function (text, value) {
+                updateIndentLevel(text);
+                indentDropdown.dropdown('hide');
+            }
+        });
+        var languageDropdown = $('#header .ui.main.menu .dropdown.language-dropdown');
+        languageDropdown.dropdown({
+            transition: 'drop',
+            action: function (text, value) {
+                updateLanguage(text);
+                languageDropdown.dropdown('hide');
+            }
+        });
+        var editorDropdown = $('#header .ui.main.menu .dropdown.editor-dropdown');
+        editorDropdown.dropdown({
+            transition: 'drop',
+            action: function (text, value) {
+                updateEditor(value);
+                editorDropdown.dropdown('hide');
+            }
+        });
     }
     function toggleFullScreen(close) {
         var fullScreen = codeMirror.getOption('fullScreen');
@@ -121,7 +199,7 @@ var App = function() {
         $('.editor-fullscreen').click(function() {
             toggleFullScreen();
         });
-        $("#source-info").mousedown(function(e) {
+        $("#console-tab").mousedown(function(e) {
             e.preventDefault();
             var viewTop = $(this).position().top;
             var mouseY = e.pageY;
@@ -147,6 +225,35 @@ var App = function() {
             e.preventDefault();
             createNode(null, false);
         });
+        $('#run-button').click(function(e) {
+            if (currentFileId !== null) {
+                /*$('#console').dimmer({
+                    closable: false
+                }).dimmer('show');*/
+
+                $('#console .ui.dimmer .text-message').text('준비중');
+                setTimeout(function() {
+                    $('#console .ui.dimmer .text-message').text('컴파일 하는 중');
+                    for (var i=0; i<10; i++) {
+                    updateConsole('g++ -O2 -o sample -std=c++0x sample.cpp');
+                    }
+                    setTimeout(function() {
+                        $('#console .ui.dimmer .text-message').text('sample.cpp < data.in 실행중');
+                    for (var i=0; i<10; i++) {
+                        updateConsole('./sample < data.in');
+                    }
+                        setTimeout(function() {
+                            $('#console .ui.dimmer .text-message').text('sample.cpp < data2.in 실행중');
+                            updateConsole('./sample < data2.in');
+                            setTimeout(function() {
+                                //$('#console').dimmer('hide');
+                            }, 3000);
+                        }, 3000);
+                    }, 3000);
+                }, 500);
+            }
+        });
+        
     }
     function convertToTreeData(elem) {
         return {
@@ -175,12 +282,13 @@ var App = function() {
                 themes : { name : "default-dark" },
                 multiple: false,
                 check_callback: function(operation, node, node_parent, node_position, more) {
-                    console.log(operation);
+                    //console.log(operation);
                     //console.log('rename node');
                     //console.log(node);
                     if (operation == 'rename_node') {
                         return (node.data.parent != '#');
-                    } else if (operation == 'move_node') {
+                    } else if (operation == 'delete_node') {
+                        return (node.data.parent != '#');
                     }
                 }
             },
@@ -200,7 +308,7 @@ var App = function() {
                 }
             },
             contextmenu: {
-                select_node: false,
+                select_node: true,
                 show_at_node: false,
                 items: function(o, cb) {
                     return {
@@ -247,7 +355,17 @@ var App = function() {
                             },
                             label: '삭제',
                             action: function(data) {
-                                deleteNode(data);
+                                if (isRootNode(data)) return;
+                                var inst = $.jstree.reference(data.reference),
+                                    obj = inst.get_node(data.reference);
+                                showDeleteAlert(inst, obj);
+                                /*
+                                if (inst.is_selected(obj)) {
+                                    inst.delete_node(inst.get_selected());
+                                } else {
+                                    inst.delete_node(obj);
+                                }
+                                */
                             },
                             icon: 'fa fa-trash-o'
                         },
@@ -276,6 +394,11 @@ var App = function() {
                 renameNode(d.node.data.id, d.text); 
             }
         });
+        tree.on('delete_node.jstree', function(e, d) {
+            if (d.node && d.node.data.id) {
+                deleteNode(d.node.data.id); 
+            }
+        });
     }
     function getInfoByExtension(ext) {
         var temp = {'language': 'Text', 'mime': 'text/plain'};
@@ -288,32 +411,53 @@ var App = function() {
         }
         return temp;
     }
-    function renameNode(nodeId, name) {
-        files.forEach(function (elem, index, arr) {
-            if (elem.id == nodeId) {
-                //var oldName = files[index].name;
-                files[index].name = name;
-                if (elem.type == 'file') {
-                    /*var m = /.+\.([^.]+)$/.exec(oldName);
-                    var oldExt = null;
-                    if (m) {
-                        oldExt = m[1];
-                    }*/
-                    var m = /.+\.([^.]+)$/.exec(name);
-                    var ext = null;
-                    var temp = getInfoByExtension();
-                    if (m) {
-                        ext = m[1];
-                        temp = getInfoByExtension(ext);
-                    }
-                    files[index].language = temp.language;
-                    files[index].mime = temp.mime;
-                    if (nodeId == currentFileId) {
-                        codeMirrorChangeMode(temp.mime, temp.language);
-                    }
+    function deleteNode(nodeId) {
+        if (undoHistory[nodeId]) {
+            delete undoHistory[nodeId];
+        }
+        currentFileId = null;
+        codeMirror.setOption('readOnly', true);
+        for (var i=0; i<files.length; i++) {
+            if (files[i].id == nodeId) {
+                files.splice(i, 1);
+                break;
+            }
+        }
+        if (Modernizr.localstorage) {
+            localStorage.removeItem(nodeId);
+        }
+        saveFiles();
+    }
+    function getFileIndexById(nodeId) {
+        if (files) {
+            for (var i=0; i<files.length; i++) {
+                if (files[i].id == nodeId) {
+                    return i;
                 }
             }
-        });
+        }
+        return -1;
+    }
+    function renameNode(nodeId, name) {
+        var file = getFileById(nodeId);
+        var index = getFileIndexById(nodeId);
+        if (index != -1) {
+            files[index].name = name;
+            if (file.type == 'file') {
+                var m = /.+\.([^.]+)$/.exec(name);
+                var ext = null;
+                var temp = getInfoByExtension();
+                if (m) {
+                    ext = m[1];
+                    temp = getInfoByExtension(ext);
+                }
+                files[index].language = temp.language;
+                files[index].mime = temp.mime;
+                if (nodeId == currentFileId) {
+                    codeMirrorChangeMode(temp.mime, temp.language);
+                }
+            }
+        }
         saveFiles();
     }
     function isRootNode(data) {
@@ -321,18 +465,24 @@ var App = function() {
             obj = inst.get_node(data.reference);
         return (obj.parent == '#');
     }
-
-    function createFolder(data) {
-    }
-    function createFile(data) {
-    }
-    function deleteNode(data) {
-    }
-    function cutNode(data) {
-    }
-    function copyNode(data) {
-    }
-    function pasteNode(data) {
+    function updateLanguage(lang) {
+        if (lang && codeMirror && currentFileId) {
+            var f = getFileById(currentFileId);
+            var index = getFileIndexById(currentFileId);
+            var mime = null;
+            if (f === null) return;
+            if (lang == 'C++') {
+                mime = 'text/x-c++src'; 
+            } else if (lang == 'Plain Text') {
+                mime = 'text/plain';
+            }
+            if (mime) {
+                files[index].language = lang;
+                files[index].mime = mime;
+                codeMirrorChangeMode(mime, lang);
+                saveFiles();
+            }
+        }
     }
     function codeMirrorChangeMode(mime, language) {
         var mode,spec;
@@ -348,9 +498,18 @@ var App = function() {
         }
     }
     function loadSource(fileId, sourceCode, mime, language) {
+        if (currentFileId) {
+            var history = codeMirror.getHistory();
+            undoHistory[currentFileId] = JSON.stringify(history);
+        }
         currentFileId = null;
         var doc = CodeMirror.Doc(sourceCode, mime, 0);
         codeMirror.swapDoc(doc);
+        $('#line-info').text('1:1');
+
+        if (undoHistory[fileId]) {
+            codeMirror.setHistory(JSON.parse(undoHistory[fileId]));
+        }
 
         codeMirror.setOption('readOnly', false);
         codeMirrorChangeMode(mime, language);
@@ -375,7 +534,7 @@ var App = function() {
                 if (Modernizr.localstorage) {
                     localStorage.setItem(fileId, res);
                 }
-                loadSource(fileId, res, mime, language);
+                loadSource(fileId, res, file.mime, file.language);
             }).fail(function() {
                 if (Modernizr.localstorage) {
                     localStorage.setItem(fileId, "");
@@ -445,7 +604,7 @@ var App = function() {
         }
         var temp = {file: newNodeName, name: newNodeName, id: uuid(), type: (isFolder ? 'folder' : 'file'), parent: parentId};
         if (!isFolder) {
-            temp.language = 'Text';
+            temp.language = 'Plain Text';
             temp.mime = 'text/plain';
         }
         files.push(temp);
@@ -470,6 +629,33 @@ var App = function() {
         });
 
     }
+    function showDeleteAlert(inst, obj) {
+        var v = null;
+        if (inst.is_selected(obj)) {
+            v = inst.get_selected();
+        } else {
+            v = obj;
+        }
+        if ($.isArray(v) && v.length > 0) {
+            v = v[0];
+        }
+        var file = getFileById(v);
+        $('#delete-alert .file-type').text((file.type == 'foler') ? '폴더' : '파일');
+        $('#delete-alert .file-name').text(file.name);
+        $('#delete-alert').modal({
+            closable: false,
+            onDeny: function() {
+                //console.log('deny');
+            },
+            onApprove: function() {
+                if (inst.is_selected(obj)) {
+                    inst.delete_node(inst.get_selected());
+                } else {
+                    inst.delete_node(obj);
+                }
+            },
+        }).modal('show');
+    }
     function randomString(length, chars) {
         var result = '';
         for (var i = length; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
@@ -478,12 +664,32 @@ var App = function() {
     function uuid() {
         return randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
     }
+    function updateConsole(message, clear) {
+        var c = $('#console-content');
+        var pwd = 'baekjoon@coding.sh:~# ';
+        if (clear) {
+            c.empty();
+        }
+        var p = $('<p></p>').text(pwd); //.hide();
+        var s = $('<span class="typed"></span>'); 
+        p.append(s);
+        c.append(p);
+        //p.transition('fade right');
+        s.typed({
+            strings: [message],
+            contentType: 'text',
+            showCursor: false,
+            callback: function() {
+            }
+        });
+        $('#console-content').scrollTo(p);
+    }
     return {
         init: function() {
             setupCodemirror();
             handleViewportSizeChange(true);
             registerEventHandler();
-            makeDraggable();
+            setupDropdown();
             loadTree();
             $('#loading').remove();
         },

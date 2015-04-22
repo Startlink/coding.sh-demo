@@ -9,10 +9,11 @@
         <link rel="stylesheet" href="/assets/codemirror/lib/codemirror.css">
         <link rel="stylesheet" href="/assets/codemirror/theme/lesser-dark.css">
         <link rel="stylesheet" href="/assets/codemirror/addon/display/fullscreen.css">
-        <link rel="stylesheet" href="/assets/jstree/dist/themes/default-dark/style.min.css">
-        <link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.min.css">
-        <!--<link rel="stylesheet" href="/assets/jQuery-contextMenu/src/jquery.contextMenu.css">-->
+        <link rel="stylesheet" href="/assets/codemirror/addon/dialog/dialog.css">
+        <link rel="stylesheet" href="/assets/jstree/dist/themes/default-dark/style.css">
+        <link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.css">
         <link rel="stylesheet" href="/assets/style.css">
+        <link rel="stylesheet" href="/assets/blink-cursor.css">
         
 
     </head>
@@ -20,9 +21,15 @@
         <div id="loading">
             <div class="ui segment">
                 <div class="ui active dimmer">
-                    <div class="ui loader text">
-                        <p>./coding.sh</p>
-                        <p>로딩중</p>
+                    <div class = "content">
+                        <div class = "center">
+                            <div class="ui loader text">
+                                <h2 class = "ui inverted header">
+                                    <span class="text-logo">./coding.sh</span>
+                                </h2>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -36,65 +43,84 @@
                     <a href="javascript:void(0);" class="item" id="header-create-file-link">
                         새 파일
                     </a>
-                    <a href="javascript:void(0);" class="item">
-                        Edit
-                    </a>
-                    <a href="javascript:void(0);" class="item">
-                        View
-                    </a>
-                    <a href="javascript:void(0);" class="item">
-                        Find
-                    </a>
-                    <a href="javascript:void(0);" class="item">
-                        Navigate
-                    </a>
-                    <a href="javascript:void(0);" class="item">
-                        Editor
-                    </a>
-                    <a href="javascript:void(0);" class="item">
-                        Product
-                    </a>
-                    <a href="javascript:void(0);" class="item">
-                        Debug
-                    </a>
-                    <a href="javascript:void(0);" class="item">
+                    <a href="javascript:void(0);" class="item" id="compile-button">
                         컴파일
                     </a>
-                    <a href="javascript:void(0);" class="item">
+                    <a href="javascript:void(0);" class="item" id="run-button">
                         실행
                     </a>
+                    <a href="javascript:void(0);" class="line item">
+                        <span id="line-info"></span>
+                    </a>
+                    <div class="ui pointing language-dropdown dropdown link item">
+                        <span class = "text" id="language-info"></span>
+                        <i class = "language-dropdown dropdown icon"></i>
+                        <div class = "menu">
+                            <div class="item">C++</div>
+                            <div class="item">Plain Text</div>
+                        </div>
+                    </div>
+                    <div class="ui pointing indent-dropdown dropdown link item">
+                        <span class = "text">들여쓰기: <span id="indent-info"></span></span>
+                        <i class="indent-dropdown dropdown icon"></i>
+                        <div class="menu">
+                            <div class="item">2</div>
+                            <div class="item">3</div>
+                            <div class="item">4</div>
+                            <div class="item">8</div>
+                        </div>
+                    </div>
+                    <div class="ui pointing editor-dropdown dropdown link item">
+                        <span class = "text">에디터: <span id="editor-info"></span></span>
+                        <i class="indent-dropdown dropdown icon"></i>
+                        <div class="menu">
+                            <div class="item" data-value="default">기본</div>
+                            <div class="item" data-value="vim">Vim</div>
+                        </div>
+                    </div>
                     <a href="javascript:void(0);" class="item editor-fullscreen">
                         전체 화면 <span id="full-screen-close-text">닫기</span>
+                    </a>
+                    <a href="javascript:void(0);" class="item">
+                        업데이트 안내
+                    </a>
+                    <a href="javascript:void(0);" class="item">
+                        도움말
                     </a>
                 </div>
             </div>
         </div>
         <div id="container">
             <div id="sidebar">
-                <div id="sidebar-tree">
+                <div id="sidebar-tree-container">
+                    <div id="sidebar-tree">
+                    </div>
                 </div>
             </div>
             <div id="content">
                 <div id="coding" class = "window">
                     <textarea id="source" name="source" autofocus="autofocus"></textarea>
                 </div>
-                <div id="source-info" class = "window">
-                    <div class = "pull-right">
-                        <span id="line-info" class="info-text"></span>
-                        <span id="language-info" class="info-text"></span>
-                        <span id="space-info" class="info-text"></span>
-                        <span class="editor-fullscreen info-text">
-                            <i class="fa fa-expand"></i>
-                        </span>
+                <div id="console-tab" class = "window">
+                    <div class="ui secondary menu">
+                        <a class="item monospace active">터미널</a>
+                        <a class="item monospace">sample.cpp &lt; data.in</a>
+                        <a class="item monospace">sample.cpp &lt; data2.in</a>
                     </div>
                 </div>
                 <div id="console" class = "window">
-                    <p>baekjoon@coding.sh:~# g++ -O2 -o Main Main.cpp</p>
+                    <div id="console-content"> 
+                    </div>
+                    <div class="ui dimmer">
+                        <div class="ui loader text">
+                            <p class="text-message">컴파일 하는 중</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <script src="/assets/jquery/dist/jquery.min.js"></script>
-        <script src="/assets/semantic-ui/dist/semantic.min.js"></script>
+        <script src="/assets/jquery/dist/jquery.js"></script>
+        <script src="/assets/semantic-ui/dist/semantic.js"></script>
         <script src="/assets/modernizr/modernizr.js"></script>
         <script src="/assets/codemirror/lib/codemirror.js"></script>
         <script src="/assets/codemirror/addon/mode/loadmode.js"></script>
@@ -102,18 +128,39 @@
         <script src="/assets/codemirror/mode/meta.js"></script>
         <script src="/assets/codemirror/addon/display/fullscreen.js"></script>
         <script src="/assets/codemirror/addon/selection/active-line.js"></script>
-        <script src="/assets/jstree/dist/jstree.min.js"></script>
-        <!--<script src="/assets/jQuery-contextMenu/src/jquery.ui.position.js"></script>
-        <script src="/assets/jQuery-contextMenu/src/jquery.contextMenu.js"></script>-->
+        <script src="/assets/codemirror/addon/edit/matchbrackets.js"></script>
+        <script src="/assets/codemirror/addon/search/searchcursor.js"></script>
+        <script src="/assets/codemirror/addon/dialog/dialog.js"></script>
+        <script src="/assets/codemirror/keymap/vim.js"></script>
+        <script src="/assets/jstree/dist/jstree.js"></script>
+        <script src="/assets/typed.js/js/typed.js"></script>
+        <script src="/assets/jquery.scrollTo/jquery.scrollTo.js"></script>
         <script src="/assets/string-utils.js"></script>
         <script src="/assets/selection-utils.js"></script>
         <script src="/assets/app.js"></script>
         <script>
-            
             $(document).ready(function() {
                 App.init();
             });
-            </script>
+        </script>
         <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+        <div class="ui small modal" id="delete-alert">
+            <i class="close icon"></i>
+            <div class="header">
+                <span class="file-type">파일</span> 삭제
+            </div>
+            <div class="content">
+                <p><span class="file-name"></span>을 삭제하겠습니까? (한 번 삭제하면 다시 되돌릴 수 없습니다)</p>
+            </div>
+            <div class="actions">
+                <div class="ui negative button">
+                    아니오
+                </div>
+                <div class="ui positive right labeled icon button">
+                    예
+                    <i class="checkmark icon"></i>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

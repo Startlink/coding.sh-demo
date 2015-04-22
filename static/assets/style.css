@@ -26,6 +26,11 @@ body {
     border-right-width: 1px;
     border-top-width: 1px;
 }
+#sidebar-tree-container { 
+    height: inherit;
+    overflow-y: scroll;
+    padding-bottom: 45px;
+}
 #content {
     background-color: rgba(0, 0, 0, 0.8);
     position: relative;
@@ -58,8 +63,8 @@ body {
 .CodeMirror {
     height: auto;
 }
-#content #source-info {
-    height: 22px;
+#content #console-tab {
+    height: 26px;
     background-color: #363636;
     padding-right: 10px;
     color: #ffffff;
@@ -73,17 +78,17 @@ body {
 .text-logo {
     font-family: monospace;
 }
-
+/*
 .info-text {
     cursor: pointer;
     padding-left: 5px;
     padding-right: 5px;
-}
-
+}*/
+/*
 #line-info {
     cursor: text;
 }
-
+*/
 .ui.dropdown .menu-right {
     left: auto;
     left: initial;
@@ -136,4 +141,52 @@ input.jstree-rename-input {
     left: 0;
     bottom: 0;
     right: 0;
+}
+#console pre {
+    margin: 0.5em;
+}
+#console-content {
+    margin: 0.5em;
+}
+#console-content p {
+    margin-bottom: 0;
+    white-space: pre
+}
+.ui.secondary.menu > a.item {
+    color: white;
+}
+.ui.secondary.menu > .menu > .active.item, .ui.secondary.menu > .active.item {
+    background-color: rgba(0, 0, 0, 0.35);
+}
+.ui.secondary.menu > .menu > .item, .ui.secondary.menu > .item {
+    margin: 0;
+    margin-top: 2px;
+    /* top right bottom left */
+    padding: 6px 1.0em 4px 1.0em;
+    border-top-left-radius: 0.6rem;
+    border-top-right-radius: 0.6rem;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.ui.secondary.menu > .item.monospace {
+    font-family: monospace;
+}
+#console .ui.dimmer {
+    background-color: rgba(0, 22, 45, 0.85);
+}
+
+#console-content {
+    height: inherit;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    padding-bottom: 35px;
+}
+
+#header .main.menu .line.item {
+    min-width: 70px;
+    text-align: center;
+}
+
+#header .main.menu .language-dropdown.dropdown.item {
+    min-width: 78px;
 }
