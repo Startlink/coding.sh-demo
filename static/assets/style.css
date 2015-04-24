@@ -49,7 +49,7 @@ body {
 }
 #content #console {
     background-color: #00162d;
-    font-family: monospace;
+    font-family: Monaco, Menlo, 'Ubuntu Mono', Consolas, source-code-pro, monospace;
     color: #ffffff;
     border-color: #000000;
     border-style: solid;
@@ -63,11 +63,15 @@ body {
 .CodeMirror {
     height: auto;
 }
+.CodeMirror pre {
+    font-family: Monaco, Menlo, 'Ubuntu Mono', Consolas, source-code-pro, monospace;
+    text-shadow: none;
+}
 #content #console-tab {
-    height: 26px;
-    background-color: #363636;
+    height: 35px;
+    /*background-color: #363636;
     padding-right: 10px;
-    color: #ffffff;
+    color: #ffffff;*/
     cursor: row-resize;
 }
 
@@ -76,7 +80,7 @@ body {
 }
 
 .text-logo {
-    font-family: monospace;
+    font-family: Monaco, Menlo, 'Ubuntu Mono', Consolas, source-code-pro, monospace;
 }
 /*
 .info-text {
@@ -147,6 +151,7 @@ input.jstree-rename-input {
 }
 #console-content {
     margin: 0.5em;
+    padding-right: 2em;
 }
 #console-content p {
     margin-bottom: 0;
@@ -169,10 +174,13 @@ input.jstree-rename-input {
     border-bottom-left-radius: 0;
 }
 .ui.secondary.menu > .item.monospace {
-    font-family: monospace;
+    font-family: Monaco, Menlo, 'Ubuntu Mono', Consolas, source-code-pro, monospace;
 }
 #console .ui.dimmer {
     background-color: rgba(0, 22, 45, 0.35);
+}
+#coding .ui.dimmer {
+    background-color: rgba(0, 0, 0, 0.35);
 }
 
 #console-content {
@@ -208,4 +216,30 @@ li.CodeMirror-hint-active {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
+.lint-error { 
+    font-size: 80%; 
+    background: #ffa; 
+    color: #a00; 
+    padding: 2px 5px 3px; 
+    text-shadow: none;
+}
+.lint-error-icon { 
+    color: white; 
+    background-color: red; 
+    font-weight: bold; 
+    border-radius: 50%; 
+    padding: 0 3px; 
+    margin-right: 7px; 
+}
+.lint-warning-icon { 
+    color: white; 
+    background-color: orange; 
+    font-weight: bold; 
+    border-radius: 50%; 
+    padding: 0 3px; 
+    margin-right: 7px; 
+}
 
+#console-content p {
+    word-wrap: break-word;
+}
