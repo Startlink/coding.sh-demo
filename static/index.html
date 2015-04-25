@@ -181,7 +181,7 @@
 실행: Ctrl + R
 새 파일: Ctrl + N
 저장: Ctrl + S
-실행할 때 
+실행 설정: Ctrl + I
 </textarea>
                     <div class="ui dimmer">
                         <div class="ui loader text">
@@ -293,7 +293,39 @@
             <div class="content">
                 <div class="ui form">
                     <h4 class="ui dividing header">지금은 같은 폴더에 들어있는 파일만 실행할 수 있습니다.</h4>
-                    <div class="field">
+                    <div class="file-list">
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <div class="ui button">취소</div>
+                <div class="ui green button positive">확인</div>
+            </div>
+        </div>
+        <div class="ui modal small" id="login-modal">
+            <div class="header">
+                로그인
+            </div>
+            <div class="content">
+                <div class="ui form">
+                    <h4 class="ui dividing header">beta 기간 동안에는 <a href = "https://www.acmicpc.net">acmicpc.net</a> 계정으로 로그인해야 합니다</h4>
+                    <div class="required field">
+                        <label for="username">아이디/이메일</label>
+                        <div class = "ui icon input">
+                            <input type="text" name="username" placeholder="아이디/이메일">
+                            <i class="user icon"></i>
+                        </div>
+                    </div>
+                    <div class="required field">
+                        <label>비밀번호</label>
+                        <div class = "ui icon input">
+                            <input type="password" name="password" placeholder="비밀번호">
+                            <i class="lock icon"></i>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <div class="ui negative button">회원가입</div>
+                        <div class="ui positive green button">로그인</div>
                     </div>
                 </div>
             </div>

@@ -16,6 +16,8 @@ var App = function() {
 
     var isRunning = false;
 
+    var runSettings = {};
+
     var codeMirrorOptions = null;
     function handleViewportSizeChange(first) {
         //var w = $(window).width();
@@ -512,7 +514,7 @@ var App = function() {
                                     obj = inst.get_node(data.reference);
                                 inst.edit(obj);
                             },
-                            icon: '',
+                            icon: 'fa fa-font',
                             shortcut: 113,
                             shortcut_label: 'F2'
                         },
@@ -549,7 +551,7 @@ var App = function() {
                                     obj = inst.get_node(data.reference);
                                 showRunSettingFromContextMenu(inst, obj);
                             },
-                            icon: '',
+                            icon: 'fa fa-gear',
                         },
 
                     };
@@ -718,6 +720,9 @@ var App = function() {
         if (codeMirror) {
             codeMirror.getInputField().blur();
         }
+        if (!(fileId in runSettings)) {
+            runSettings[fileId] = {};
+        }
         setTimeout(function() {
             var file = getFileById(fileId);
             if (file === null) return;
@@ -750,12 +755,18 @@ var App = function() {
     }
     function loadTree() {
         var ans = null;
+        var settings = {};
         if (Modernizr.localstorage) {
             var l = localStorage.getItem('files');
             if (l) {
                 ans = JSON.parse(l);
             }
+            var s = localStorage.getItem('run-settings');
+            if (s) {
+                settings = JSON.parse(s);
+            }
         }
+        runSettings = settings;
         if (ans) {
         } else {
             ans = [
@@ -766,6 +777,11 @@ var App = function() {
             ];
         }
         makeTree(ans);
+    }
+    function saveSettings() {
+        if (Modernizr.localstorage) {
+            localStorage.setItem('run-settings', JSON.stringify(runSettings));
+        }
     }
     function saveFiles() {
         if (Modernizr.localstorage) {
@@ -833,7 +849,35 @@ var App = function() {
     function showRunSetting(fileId) {
         if (fileId === null) return;
         var file = getFileById(fileId);
-        $('#run-setting').modal('show');
+        var s = $('#run-setting');
+        if (s.modal('is active')) return;
+        s.find('.filename').text(file.name);
+        var f = s.find('.content .file-list');
+        f.html('');
+        files.forEach(function(elem, index, arr) {
+            if (elem.id == file.id) return;
+            if (elem.parent != file.parent) return;
+            if (elem.mime != 'text/plain') return;
+            var x = $('<div class="ui checkbox"></div>');
+            var checked = (elem.id in runSettings[file.id]);
+            x.append($('<input type="checkbox" name="'+elem.id+'" '+(checked && 'checked = "checked"' ) +'>'));
+            x.append($('<label for="'+elem.id+'"></label').text(elem.name));
+            f.append($('<div class="field"></div>').append(x));
+        });
+        f.find('.ui.checkbox').checkbox();
+        s.modal({
+            closable: false,
+            onApprove: function() {
+                delete runSettings[file.id];
+                runSettings[file.id] = {};
+                f.find('.ui.checkbox').each(function() {
+                    if ($(this).checkbox('is checked')) {
+                        runSettings[file.id][$(this).children('input').eq(0).attr('name')] = true;
+                    }
+                });
+                saveSettings();
+            }
+        }).modal('show');
     }
     function showRunSettingFromContextMenu(inst, obj) {
         var v = null;
@@ -1066,15 +1110,50 @@ var App = function() {
             }, 2000);
         }, 500);
     }
-
+    function showLoginModal() {
+        $('#login-modal .ui.form').form({
+            username: {
+                identifier: 'username',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: '아이디/이메일을 입력해 주세요'
+                    }
+                ]
+            },
+            password: {
+                identifier: 'password',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: '비밀번호를 입력해 주세요'
+                    }
+                ]
+            }
+        }, {
+            inline: true
+        });
+        $('#login-modal').modal({
+            closable: false,
+            onDeny: function() {
+                return false;
+            },
+            onApprove: function() {
+                return false;
+            }
+        }).modal('show');
+    }
     return {
         init: function() {
-            setupCodemirror();
-            handleViewportSizeChange(true);
-            registerEventHandler();
-            setupDropdown();
-            loadTree();
-            $('#loading').remove();
+            /*
+               setupCodemirror();
+               handleViewportSizeChange(true);
+               registerEventHandler();
+               setupDropdown();
+               loadTree();
+               $('#loading').remove();*/
+            showLoginModal();
+
         },
     };
 }();
