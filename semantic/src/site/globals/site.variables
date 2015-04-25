@@ -1,0 +1,6 @@
+/*******************************
+     User Global Variables
+*******************************/
+
+@headerFont : 'Lato', 'Helvetica Neue', 'Nanum Gothic', Arial, Helvetica, sans-serif;
+@pageFont : 'Lato', 'Helvetica Neue', 'Nanum Gothic', Arial, Helvetica, sans-serif;

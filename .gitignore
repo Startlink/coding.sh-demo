@@ -3,7 +3,7 @@ static/assets/**
 !static/assets/*.css
 !static/assets/*.js
 semantic/*
-!semantic/src/site/globals/site.overrides
+!semantic/src/site/globals/site.*
 
 
 # vim
