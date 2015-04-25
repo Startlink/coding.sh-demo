@@ -2,6 +2,8 @@ node_modules
 static/assets/**
 !static/assets/*.css
 !static/assets/*.js
+semantic/*
+!semantic/src/site/globals/site.overrides
 
 
 # vim

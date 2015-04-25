@@ -207,6 +207,19 @@ var App = function() {
             },
             'Ctrl-B': function(cm) {
                 demoCompile();
+            },
+            'Ctrl-S': function(cm) {
+                demoServerStatus(true);
+                saveCurrentFile();
+                setTimeout(function() {
+                    demoServerStatus(false);
+                }, 1000);
+            },
+            'Ctrl-N': function(cm) {
+                createNode(null, false);
+            },
+            'Ctrl-I': function(cm) {
+                showRunSetting(currentFileId);
             }
         };
         if (currentEditor == 'vim') {
@@ -242,7 +255,7 @@ var App = function() {
             indentUnit: 4,
             autoCloseBrackets: codeMirrorOptions['auto-close-brackets'],
             theme: "lesser-dark",
-            mode: "text/x-c++src",
+            mode: "text/plain",
             readOnly: 'nocursor',
             keyMap: currentEditor,
             styleActiveLine: codeMirrorOptions['line-highlight'],
@@ -367,7 +380,11 @@ var App = function() {
             createNode(null, false);
         });
         $('#save-button').click(function(e) {
+            demoServerStatus(true);
             saveCurrentFile();
+            setTimeout(function() {
+                demoServerStatus(false);
+            }, 1000);
         });
         $('#run-button').click(function(e) {
             saveCurrentFile();
@@ -501,7 +518,7 @@ var App = function() {
                         },
                         delete_node: {
                             separator_before: false,
-                            separator_after: false,
+                            separator_after: true,
                             _disabled: function(data) {
                                 return isRootNode(data);
                             },
@@ -521,6 +538,20 @@ var App = function() {
                             },
                             icon: 'fa fa-trash-o'
                         },
+                        run_seeting: {
+                            separator_before: false,
+                            separator_after: false,
+                            _disabled: false,
+                            label: '실행 설정',
+                            action: function(data) {
+                                if (isRootNode(data)) return;
+                                var inst = $.jstree.reference(data.reference),
+                                    obj = inst.get_node(data.reference);
+                                showRunSettingFromContextMenu(inst, obj);
+                            },
+                            icon: '',
+                        },
+
                     };
                 },
             },
@@ -798,6 +829,23 @@ var App = function() {
             setTimeout(function () { inst.edit(new_node); },0);
         });
 
+    }
+    function showRunSetting(fileId) {
+        if (fileId === null) return;
+        var file = getFileById(fileId);
+        $('#run-setting').modal('show');
+    }
+    function showRunSettingFromContextMenu(inst, obj) {
+        var v = null;
+        if (inst.is_selected(obj)) {
+            v = inst.get_selected();
+        } else {
+            v = obj;
+        }
+        if ($.isArray(v) && v.length > 0) {
+            v = v[0];
+        }
+        showRunSetting(v);
     }
     function showDeleteAlert(inst, obj) {
         var v = null;

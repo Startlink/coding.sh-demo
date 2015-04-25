@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Code+Pro);
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 html, body {
     background-color: black;
 }
@@ -30,6 +32,10 @@ body {
     height: inherit;
     overflow-y: scroll;
     padding-bottom: 45px;
+    -ms-overflow-style: none;
+}
+#sidebar-tree-container::-webkit-scrollbar {
+    display: none;
 }
 #content {
     background-color: rgba(0, 0, 0, 0.8);
@@ -149,14 +155,6 @@ input.jstree-rename-input {
 #console pre {
     margin: 0.5em;
 }
-#console-content {
-    margin: 0.5em;
-    padding-right: 2em;
-}
-#console-content p {
-    margin-bottom: 0;
-    white-space: pre
-}
 .ui.secondary.menu > a.item {
     color: white;
 }
@@ -184,10 +182,13 @@ input.jstree-rename-input {
 }
 
 #console-content {
+    padding: 0.5em;
+    padding-right: 2em;
     height: inherit;
     overflow-y: scroll;
-    overflow-x: scroll;
+    overflow-x: hidden;
     padding-bottom: 35px;
+    -ms-overflow-style: none;
 }
 
 #header .main.menu .line.item {
@@ -241,5 +242,7 @@ li.CodeMirror-hint-active {
 }
 
 #console-content p {
+    margin-bottom: 0;
+    white-space: pre;
     word-wrap: break-word;
 }

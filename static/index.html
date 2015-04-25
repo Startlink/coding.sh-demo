@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <!--<meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">-->
         <!--<link rel="stylesheet" href="/assets/normalize.css/normalize.css">-->
-        <link rel="stylesheet" href="/assets/semantic-ui/dist/semantic.css">
+        <link rel="stylesheet" href="/assets/semantic/semantic.css">
         <link rel="stylesheet" href="/assets/codemirror/lib/codemirror.css">
         <link rel="stylesheet" href="/assets/codemirror/theme/lesser-dark.css">
         <link rel="stylesheet" href="/assets/codemirror/addon/display/fullscreen.css">
@@ -38,128 +38,126 @@
         </div>
         <div id="header">
             <div class="ui fixed inverted main menu" id="header-menu">
-                <div class="container">
-                    <div class="title item text-logo">
-                        <strong>./coding.sh</strong>
-                    </div>
-                    <a href="javascript:void(0);" class="item" id="header-create-file-link">
-                        <i class="fa fa-file-o"></i>
-                    </a><!--
-                    <a href="javascript:void(0);" class="item" id="copy-button">
-                        복사
-                    </a>-->
-                    <a href="javascript:void(0);" class="item" id="save-button">
-                        <i class = "fa fa-save"></i>
-                    </a>
+                <div class="title item text-logo header">
+                    <strong>./coding.sh</strong>
+                </div>
+                <a href="javascript:void(0);" class="item" id="header-create-file-link">
+                    <i class="fa fa-file-o"></i>
+                </a><!--
+                <a href="javascript:void(0);" class="item" id="copy-button">
+                    복사
+                </a>-->
+                <a href="javascript:void(0);" class="item" id="save-button">
+                    <i class = "fa fa-save"></i>
+                </a>
 
-                    <a href="javascript:void(0);" class="item" id="compile-button">
-                        컴파일
-                    </a>
-                    <a href="javascript:void(0);" class="item" id="run-button">
-                        실행
-                    </a>
-                    <a href="javascript:void(0);" class="line item">
-                        <span id="line-info"></span>
-                    </a>
-                    <div class="ui pointing language-dropdown dropdown link item">
-                        <span class = "text" id="language-info"></span>
-                        <i class = "language-dropdown dropdown icon"></i>
-                        <div class = "menu">
-                            <div class="item">C++</div>
-                            <div class="item">Plain Text</div>
-                        </div>
+                <a href="javascript:void(0);" class="item" id="compile-button">
+                    컴파일
+                </a>
+                <a href="javascript:void(0);" class="item" id="run-button">
+                    실행
+                </a>
+                <a href="javascript:void(0);" class="line item">
+                    <span id="line-info"></span>
+                </a>
+                <div class="ui pointing language-dropdown dropdown link item">
+                    <span class = "text" id="language-info"></span>
+                    <i class = "language-dropdown dropdown icon"></i>
+                    <div class = "menu">
+                        <div class="item">C++</div>
+                        <div class="item">Plain Text</div>
                     </div>
-                    <div class="ui pointing indent-dropdown dropdown link item">
-                        <span class = "text">들여쓰기: <span id="indent-info"></span></span>
-                        <i class="indent-dropdown dropdown icon"></i>
-                        <div class="menu">
-                            <div class="item">2</div>
-                            <div class="item">3</div>
-                            <div class="item">4</div>
-                            <div class="item">8</div>
-                        </div>
+                </div>
+                <div class="ui pointing indent-dropdown dropdown link item">
+                    <span class = "text">들여쓰기: <span id="indent-info"></span></span>
+                    <i class="indent-dropdown dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item">2</div>
+                        <div class="item">3</div>
+                        <div class="item">4</div>
+                        <div class="item">8</div>
                     </div>
-                    <div class="ui pointing editor-dropdown dropdown link item">
-                        <span class = "text">에디터: <span id="editor-info"></span></span>
-                        <i class="indent-dropdown dropdown icon"></i>
-                        <div class="menu">
-                            <div class="item" data-value="default">기본</div>
-                            <div class="item" data-value="vim">Vim</div>
-                            <div class="item" data-value="emacs">Emacs</div>
-                            <div class="item" data-value="sublime">Sublime</div>
-                        </div>
+                </div>
+                <div class="ui pointing editor-dropdown dropdown link item">
+                    <span class = "text">에디터: <span id="editor-info"></span></span>
+                    <i class="indent-dropdown dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item" data-value="default">기본</div>
+                        <div class="item" data-value="vim">Vim</div>
+                        <div class="item" data-value="emacs">Emacs</div>
+                        <div class="item" data-value="sublime">Sublime</div>
                     </div>
-                    <div class="ui pointing settings-dropdown dropdown link item">
-                        <span class="text"><i class="fa fa-cog"></i></span>
-                        <i class="indent-dropdown dropdown icon"></i>
-                        <div class = "menu">
-                            <div class = "item">
-                                <div class = "ui toggle checkbox">
-                                    <label>줄 하이라이트</label>
-                                    <input type="checkbox" name="line-highlight">
-                                </div>
-                            </div>
-                            <div class = "item">
-                                <div class = "ui toggle checkbox">
-                                    <label>줄 번호</label>
-                                    <input type="checkbox" name="line-numbers">
-                                </div>
-                            </div>
-                            <div class = "item">
-                                <div class = "ui toggle checkbox">
-                                    <label>괄호 짝 보여주기</label>
-                                    <input type="checkbox" name="match-brackets">
-                                </div>
-                            </div>
-                            <div class = "item">
-                                <div class = "ui toggle checkbox">
-                                    <label>자동으로 괄호 닫기</label>
-                                    <input type="checkbox" name="auto-close-brackets">
-                                </div>
-                            </div>
-                            <div class = "item">
-                                <div class = "ui toggle checkbox">
-                                    <label>코드 접기</label>
-                                    <input type="checkbox" name="fold-gutter">
-                                </div>
-                            </div>
-                            <!--
-                            <div class = "item">
-                                <div class = "ui toggle checkbox">
-                                    <label>자동 완성</label>
-                                    <input type="checkbox" name="auto-complete">
-                                </div>
-                            </div>
-                            -->
-                            <!--
-                            <div class = "item">
-                                <div class = "ui toggle checkbox">
-                                    <label>소프트 탭</label>
-                                    <input type="checkbox" name="soft-tab">
-                                </div>
-                            </div>
-                            -->
-                        </div>
-                    </div>
-                    <a href="javascript:void(0);" class="item editor-fullscreen" id="fullscreen-button">
-                        <i class = "fa fa-expand"></i>
-                    </a>
-                    <a href="javascript:void(0);" class="item" id="update-button">
-                        <i class="fa fa-exclamation"></i>
-                    </a>
-                    <a href="javascript:void(0);" class="item">
-                        <i class="fa fa-question"></i>
-                    </a>
-                    <a href="https://www.facebook.com/startlink.io" target="_blank" class="item">Startlink</a>
-                    <a href="javascript:void(0);" class="item">
-                        <i class = "fa fa-power-off"></i>
-                    </a>
-                    <div class = "menu right" id="server-status">
+                </div>
+                <div class="ui pointing settings-dropdown dropdown link item">
+                    <span class="text"><i class="fa fa-cog"></i></span>
+                    <i class="indent-dropdown dropdown icon"></i>
+                    <div class = "menu">
                         <div class = "item">
-                            <span class="text">
-                                <div class="status ui green empty circular label"></div>
-                            </span>
+                            <div class = "ui toggle checkbox">
+                                <label>줄 하이라이트</label>
+                                <input type="checkbox" name="line-highlight">
+                            </div>
                         </div>
+                        <div class = "item">
+                            <div class = "ui toggle checkbox">
+                                <label>줄 번호</label>
+                                <input type="checkbox" name="line-numbers">
+                            </div>
+                        </div>
+                        <div class = "item">
+                            <div class = "ui toggle checkbox">
+                                <label>괄호 짝 보여주기</label>
+                                <input type="checkbox" name="match-brackets">
+                            </div>
+                        </div>
+                        <div class = "item">
+                            <div class = "ui toggle checkbox">
+                                <label>자동으로 괄호 닫기</label>
+                                <input type="checkbox" name="auto-close-brackets">
+                            </div>
+                        </div>
+                        <div class = "item">
+                            <div class = "ui toggle checkbox">
+                                <label>코드 접기</label>
+                                <input type="checkbox" name="fold-gutter">
+                            </div>
+                        </div>
+                        <!--
+                        <div class = "item">
+                            <div class = "ui toggle checkbox">
+                                <label>자동 완성</label>
+                                <input type="checkbox" name="auto-complete">
+                            </div>
+                        </div>
+                        -->
+                        <!--
+                        <div class = "item">
+                            <div class = "ui toggle checkbox">
+                                <label>소프트 탭</label>
+                                <input type="checkbox" name="soft-tab">
+                            </div>
+                        </div>
+                        -->
+                    </div>
+                </div>
+                <a href="javascript:void(0);" class="item editor-fullscreen" id="fullscreen-button">
+                    <i class = "fa fa-expand"></i>
+                </a>
+                <a href="javascript:void(0);" class="item" id="update-button">
+                    <i class="fa fa-exclamation"></i>
+                </a>
+                <a href="javascript:void(0);" class="item">
+                    <i class="fa fa-question"></i>
+                </a>
+                <a href="https://www.facebook.com/startlink.io" target="_blank" class="item">Startlink</a>
+                <a href="javascript:void(0);" class="item">
+                    <i class = "fa fa-power-off"></i>
+                </a>
+                <div class = "right menu" id="server-status">
+                    <div class = "item">
+                        <span class="text">
+                            <div class="status ui green empty circular label"></div>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -173,7 +171,18 @@
             </div>
             <div id="content">
                 <div id="coding" class = "window">
-                    <textarea id="source" name="source" autofocus="autofocus"></textarea>
+                    <textarea id="source" name="source" autofocus="autofocus">./coding.sh 베타
+베타 기간 중에는 https://www.acmicpc.net/ 계정으로 로그인해야 합니다.
+베타가 끝나면 acmicpc.net 로그인이 사라지고, 자체 로그인으로 변경됩니다. 또한, 페이스북/트위터/github로도 로그인 할 수 있게 됩니다.
+
+현재 사용 가능한 언어: C++, Text (계속 추가될 예정입니다)
+
+컴파일: Ctrl + B
+실행: Ctrl + R
+새 파일: Ctrl + N
+저장: Ctrl + S
+실행할 때 
+</textarea>
                     <div class="ui dimmer">
                         <div class="ui loader text">
                             <p class="text-message">소스 불러오는 중</p>
@@ -206,7 +215,7 @@
             </div>
         </div>
         <script src="/assets/jquery/dist/jquery.js"></script>
-        <script src="/assets/semantic-ui/dist/semantic.js"></script>
+        <script src="/assets/semantic/semantic.js"></script>
         <script src="/assets/modernizr/modernizr.js"></script>
         <script src="/assets/codemirror/lib/codemirror.js"></script>
         <script src="/assets/codemirror/addon/mode/loadmode.js"></script>
@@ -232,7 +241,7 @@
         <script src="/assets/jstree/dist/jstree.js"></script>
         <script src="/assets/typed.js/js/typed.js"></script>
         <script src="/assets/jquery.scrollTo/jquery.scrollTo.js"></script>
-        <script src="/assets/zeroclipboard/dist/Zeroclipboard.js"></script>
+        <script src="/assets/zeroclipboard/dist/ZeroClipboard.js"></script>
         <script src="/assets/string-utils.js"></script>
         <script src="/assets/app.js"></script>
         <script>
@@ -273,6 +282,19 @@
             <div class="actions">
                 <div class="ui primary button">
                     닫기
+                </div>
+            </div>
+        </div>
+        <div class="ui modal small" id="run-setting">
+            <i class="close icon"></i>
+            <div class="header">
+                <span class="filename"></span> 실행 설정
+            </div>
+            <div class="content">
+                <div class="ui form">
+                    <h4 class="ui dividing header">지금은 같은 폴더에 들어있는 파일만 실행할 수 있습니다.</h4>
+                    <div class="field">
+                    </div>
                 </div>
             </div>
         </div>
